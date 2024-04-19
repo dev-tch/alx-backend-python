@@ -5,4 +5,7 @@ import functools
 
 def sum_list(input_list: list[float]) -> float:
     """ count sum of list elements """
-    return functools.reduce(lambda x, y: x + y, input_list)
+    if (input_list):
+        return functools.reduce(lambda x, y: x + y, input_list)
+    else:
+        return 0.0
