@@ -1,11 +1,8 @@
 #!/usr/bin/env python3
 """ module with one function sum_list """
-import functools
+from typing import List
 
 
-def sum_list(input_list: list[float]) -> float:
+def sum_list(input_list: List[float]) -> float:
     """ count sum of list elements """
-    if (input_list):
-        return functools.reduce(lambda x, y: x + y, input_list)
-    else:
-        return 0.0
+    return sum(input_list)
