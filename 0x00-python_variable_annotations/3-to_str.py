@@ -4,4 +4,4 @@
 
 def to_str(n: float) -> str:
     """ function to for string representation of float"""
-    return "{:.2f}".format(n)
+    return str(n)
