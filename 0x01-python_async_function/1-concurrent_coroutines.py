@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-""" """
+"""module with one function wait_n"""
 from typing import List
 import asyncio
 wait_random = __import__('0-basic_async_syntax').wait_random
 
 
 async def wait_n(n: int, max_delay: int) -> List[float]:
-    """ asynchronous function  to await random delay"""
+    """ execute multiple asynchronous tasks """
     my_list: List[float] = []
     asyn_tasks: List[float] = []
     asyn_tasks = [wait_random(max_delay) for _ in range(n)]
