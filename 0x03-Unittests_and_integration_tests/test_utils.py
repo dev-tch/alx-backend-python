@@ -14,4 +14,5 @@ class TestAccessNestedMap (unittest.TestCase):
     ])
     def test_access_nested_map(self, nested_map, path, expected):
         """Test access_nested_map method"""
-        self.assertEqual(access_nested_map(nested_map, path), expected)
+        output = access_nested_map(nested_map, path)
+        self.assertEqual(output, expected)
