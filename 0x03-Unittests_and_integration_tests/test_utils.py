@@ -4,9 +4,9 @@ import unittest
 from parameterized import parameterized
 from utils import access_nested_map
 from typing import (
-    Mapping,
-    Sequence,
-    Any
+    Dict,
+    Tuple,
+    Union
 )
 
 
@@ -17,7 +17,11 @@ class TestAccessNestedMap (unittest.TestCase):
         ({"a": {"b": 2}}, ("a",), {"b": 2}),
         ({"a": {"b": 2}}, ("a", "b"), 2),
     ])
-    def test_access_nested_map(self, nested_map: Mapping,
-                               path: Sequence, expected) -> Any:
-        """ test case for method access_nested_map"""
+    def test_access_nested_map(
+            self,
+            nested_map: Dict,
+            path: Tuple[str],
+            expected: Union[Dict, int],
+            ) -> None:
+        """Test access_nested_map method"""
         self.assertEqual(access_nested_map(nested_map, path), expected)
