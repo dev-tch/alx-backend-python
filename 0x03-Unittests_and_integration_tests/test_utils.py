@@ -6,7 +6,7 @@ from utils import access_nested_map
 from typing import (
     Dict,
     Tuple,
-    Union
+    Any
 )
 
 
@@ -17,7 +17,7 @@ class TestAccessNestedMap (unittest.TestCase):
         ({"a": {"b": 2}}, ("a",), {"b": 2}),
         ({"a": {"b": 2}}, ("a", "b"), 2),
         ])
-    def test_access_nested_map(self, nested_map: Dict, path: Tuple[str, ...],
-                               expected: Union[Dict, int]) -> None:
+    def test_access_nested_map(self, nested_map: Dict[str, Any],
+                               path: Tuple[str, ...], expected: Any) -> None:
         """ test case for method access_nested_map"""
         self.assertEqual(access_nested_map(nested_map, path), expected)
