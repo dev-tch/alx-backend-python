@@ -34,3 +34,37 @@ class TestGithubOrgClient(unittest.TestCase):
             }
             instance = GithubOrgClient("google")
             self.assertEquals(instance._public_repos_url, repo_url)
+
+    @patch('client.get_json')
+    def test_public_repos(self, mock_json):
+        """ test function public_repos of client module"""
+        json_org_google = {
+            "login": "google",
+            "id": 1342004,
+            "node_id": "MDEyOk9yZ2FuaXphdGlvbjEzNDIwMDQ=",
+            "url": "https://api.github.com/orgs/google",
+            "repos_url": "https://api.github.com/orgs/google/repos",
+            "events_url": "https://api.github.com/orgs/google/events",
+            "type": "Organization"
+        }
+        json_repos_url = [
+            {
+                "id": 1936771,
+                "node_id": "MDEwOlJlcG9zaXRvcnkxOTM2Nzcx",
+                "name": "truth",
+                "full_name": "google/truth",
+            },
+            {
+                "id": 3248531,
+                "node_id": "MDEwOlJlcG9zaXRvcnkzMjQ4NTMx",
+                "name": "autoparse",
+            },
+            ]
+        mock_json.return_value = json_repos_url
+        with patch('client.GithubOrgClient._public_repos_url',
+                   new_callable=PropertyMock) as mock_repo:
+            mock_repo.return_value = json_org_google['repos_url']
+            instance = GithubOrgClient("google")
+            self.assertEquals(instance.public_repos(), ["truth", "autoparse"])
+            mock_repo.assert_called_once()
+        mock_json.assert_called_once()
