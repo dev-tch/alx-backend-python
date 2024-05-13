@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """ module to test client"""
 import unittest
-from parameterized import parameterized
-from unittest.mock import patch, MagicMock, PropertyMock
+from parameterized import parameterized, parameterized_class
+from unittest.mock import patch, MagicMock, PropertyMock, Mock
 from client import GithubOrgClient
 from typing import Dict
+from fixtures import TEST_PAYLOAD
+from requests import HTTPError
 
 
 class TestGithubOrgClient(unittest.TestCase):
@@ -78,3 +80,51 @@ class TestGithubOrgClient(unittest.TestCase):
         """ test method has_license"""
         self.assertEquals(GithubOrgClient.has_license(repo, license_key),
                           expected)
+
+
+@parameterized_class([
+    {
+        'url_repos': TEST_PAYLOAD[0][0],
+        'repos_payload': TEST_PAYLOAD[0][1],
+        'names_repos': TEST_PAYLOAD[0][2],
+        'license_repos': TEST_PAYLOAD[0][3],
+    },
+])
+class TestIntegrationGithubOrgClient(unittest.TestCase):
+    """implement classs"""
+    @classmethod
+    def setUpClass(cls):
+        """setup class Test and start patcher"""
+        urls_to_test = {
+            'https://api.github.com/orgs/google': cls.url_repos,
+            'https://api.github.com/orgs/google/repos': cls.repos_payload,
+        }
+
+        def mock_request_get(url):
+            """ sideeffect function to return Mock Object"""
+            if url in urls_to_test:
+                attrs = {'json.return_value': urls_to_test[url]}
+                return Mock(**attrs)
+            return HTTPError
+
+        cls.get_patcher = patch("requests.get", side_effect=mock_request_get)
+        cls.get_patcher.start()
+
+    def test_public_repos(self):
+        """test method public_repos with fixtures"""
+        self.assertEqual(
+            GithubOrgClient("google").public_repos(),
+            self.names_repos,
+        )
+
+    def test_public_repos_with_license_apache2(self):
+        """test also has_licence used in public_repos method"""
+        self.assertEqual(
+            GithubOrgClient("google").public_repos(license="apache-2.0"),
+            self.license_repos,
+        )
+
+    @classmethod
+    def tearDownClass(cls):
+        """clear patcher"""
+        cls.get_patcher.stop()
