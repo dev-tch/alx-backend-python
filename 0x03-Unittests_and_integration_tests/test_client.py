@@ -117,8 +117,8 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
             self.expected_repos,
         )
 
-    def test_public_repos_with_license_apache2(self):
-        """test also has_licence used in public_repos method"""
+    def test_public_repos_with_license(self):
+        """test public_repos with licence which has_license apache-2.0"""
         self.assertEqual(
             GithubOrgClient("google").public_repos(license="apache-2.0"),
             self.apache2_repos,
