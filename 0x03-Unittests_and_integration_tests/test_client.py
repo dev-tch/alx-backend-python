@@ -84,10 +84,10 @@ class TestGithubOrgClient(unittest.TestCase):
 
 @parameterized_class([
     {
-        'url_repos': TEST_PAYLOAD[0][0],
+        'org_payload': TEST_PAYLOAD[0][0],
         'repos_payload': TEST_PAYLOAD[0][1],
-        'names_repos': TEST_PAYLOAD[0][2],
-        'license_repos': TEST_PAYLOAD[0][3],
+        'expected_repos': TEST_PAYLOAD[0][2],
+        'apache2_repos': TEST_PAYLOAD[0][3],
     },
 ])
 class TestIntegrationGithubOrgClient(unittest.TestCase):
@@ -96,7 +96,7 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
     def setUpClass(cls):
         """setup class Test and start patcher"""
         urls_to_test = {
-            'https://api.github.com/orgs/google': cls.url_repos,
+            'https://api.github.com/orgs/google': cls.org_payload,
             'https://api.github.com/orgs/google/repos': cls.repos_payload,
         }
 
@@ -114,14 +114,14 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         """test method public_repos with fixtures"""
         self.assertEqual(
             GithubOrgClient("google").public_repos(),
-            self.names_repos,
+            self.expected_repos,
         )
 
     def test_public_repos_with_license_apache2(self):
         """test also has_licence used in public_repos method"""
         self.assertEqual(
             GithubOrgClient("google").public_repos(license="apache-2.0"),
-            self.license_repos,
+            self.apache2_repos,
         )
 
     @classmethod
